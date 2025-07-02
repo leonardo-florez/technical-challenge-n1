@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = git@github-secundaria:leonardo-florez/backend-technical-challenge-n1.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github-secundaria:leonardo-florez/frontend-technical-challenge-n1.git
