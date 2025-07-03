@@ -1,0 +1,48 @@
+services:
+  backend:
+    depends_on:
+      - postgres-db
+    build: 
+      context: ./backend
+      dockerfile: dockerfile
+    image: backend
+    container_name: backend
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    environment:
+      - PORT=${BACKEND_PORT}
+      - JWT_SECRET=${BACKEND_JWT_SECRET}
+      - JWT_EXPIRES_IN=${BACKEND_JWT_EXPIRES_IN}
+      - DATABASE_URL=${BACKEND_DATABASE_URL}
+    volumes:
+      - ./backend/src:/usr/src/app/src
+      - ./backend/prisma:/usr/src/app/prisma
+
+  postgres-db:
+    image: postgres:17.4
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=bob
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  
+  pdAdmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    depends_on:
+      - postgres-db
+    ports:
+      - 80:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=bobcorn@correo.com
+      - PGADMIN_DEFAULT_PASSWORD=bobsecret
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+      - ./pgadmin:/certs/server.cert
+      - ./pgadmin:/certs/server.key
+      - ./pgadmin:/pgadmin4/servers.json
